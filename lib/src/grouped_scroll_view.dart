@@ -15,8 +15,10 @@ typedef ItemAtIndex<T> = void Function(int index, int total, int groupedIndex);
 
 @immutable
 class GroupedScrollView<T, H> extends StatelessWidget {
-  /// data
-  final List<T> data;
+  /// Data. Either a [List<T>] of items that will be grouped by
+  /// [groupedOptions.itemGrouper] or a [Map<H,List<T>>] of pre-grouped
+  /// items.
+  final dynamic data;
 
   /// Header
   final HeaderBuilder? headerBuilder;
@@ -276,7 +278,17 @@ class GroupedScrollView<T, H> extends StatelessWidget {
   List<Widget> _buildGroupMode(BuildContext context) {
     final options = groupedOptions!;
     List<Widget> slivers = [];
-    Map<H, List<T>> groupItems = groupBy(data, options.itemGrouper);
+    Map<H, List<T>> groupItems;
+    if (data is List<T>) {
+      if (options.itemGrouper != null) {
+        groupItems = groupBy(data, options.itemGrouper!);
+      } else {
+        throw Exception(
+            'You must provide an itemGrouper function to group the items.');
+      }
+    } else {
+      groupItems = data;
+    }
     List<H> keys = groupItems.keys.toList();
     if (options.stickyHeaderSorter != null) {
       keys.sort(options.stickyHeaderSorter);

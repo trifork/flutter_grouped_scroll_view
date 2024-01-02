@@ -13,10 +13,10 @@ class GroupedScrollViewOptions<T, H> {
       sectionFooterBuilder;
 
   /// itemGrouper
-  final H Function(T item) itemGrouper;
+  final H Function(T item)? itemGrouper;
   GroupedScrollViewOptions(
       {required this.stickyHeaderBuilder,
       this.sectionFooterBuilder,
-      required this.itemGrouper,
+      this.itemGrouper,
       this.stickyHeaderSorter});
 }
